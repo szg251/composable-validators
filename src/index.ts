@@ -1,3 +1,4 @@
-const validator = (a: number) => a + 2
+import * as string from "./string"
+import * as validatee from "./validatee"
 
-export { validator }
+export { validatee, string }
