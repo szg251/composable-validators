@@ -86,14 +86,14 @@ describe("string validators", () => {
 })
 
 describe("composed validators", () => {
-  it("succeeds when meets password criteria", () => {
-    const isValidPassword = composeMany([
-      hasLowcase("no lowercase letters"),
-      hasUpcase("no uppercase letters"),
-      hasNumber("no numbers"),
-      min(5, "at least 5 chars")
-    ])
+  const isValidPassword = composeMany([
+    hasLowcase("no lowercase letters"),
+    hasUpcase("no uppercase letters"),
+    hasNumber("no numbers"),
+    min(5, "less than 5 chars")
+  ])
 
+  it("succeeds when meets password criteria", () => {
     expect(isValidPassword(init("abCD1"))).toEqual({
       value: "abCD1",
       isValid: true,
@@ -103,13 +103,6 @@ describe("composed validators", () => {
   })
 
   it("fails when has no numbers", () => {
-    const isValidPassword = composeMany([
-      hasLowcase("no lowercase letters"),
-      hasUpcase("no uppercase letters"),
-      hasNumber("no numbers"),
-      min(5, "less than 5 chars")
-    ])
-
     expect(isValidPassword(init("abCDE"))).toEqual({
       value: "abCDE",
       isValid: false,
@@ -119,13 +112,6 @@ describe("composed validators", () => {
   })
 
   it("fails when has nothing but numbers", () => {
-    const isValidPassword = composeMany([
-      hasLowcase("no lowercase letters"),
-      hasUpcase("no uppercase letters"),
-      hasNumber("no numbers"),
-      min(5, "less than 5 chars")
-    ])
-
     expect(isValidPassword(init("1234"))).toEqual({
       value: "1234",
       isValid: false,
