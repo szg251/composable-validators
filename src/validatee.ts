@@ -1,20 +1,31 @@
-type Validator<a> = (validatee: Validatee<a>) => Validatee<a>
+type Validatee<T> = NotValidated<T> | Validated<T>
 
-interface Validatee<a> {
-  value: a
+interface Validated<T> {
+  value: T
   errors: string[]
   isValid: boolean
-  isValidated: boolean
+  isValidated: true
 }
 
-const init = <a>(value: a): Validatee<a> => ({
+interface NotValidated<T> {
+  value: T
+  errors: string[]
+  isValid: false
+  isValidated: false
+}
+
+type Validator<T> = (validatee: Validatee<T>) => Validated<T>
+
+/** Initializing a validatee */
+const init = <T>(value: T): NotValidated<T> => ({
   value,
   errors: [],
   isValid: false,
   isValidated: false
 })
 
-const input = <a>(validatee: Validatee<a>, value: a): Validatee<a> => ({
+/** Change the value of a validatee */
+const input = <T>(validatee: Validatee<T>, value: T): NotValidated<T> => ({
   ...validatee,
   value,
   errors: [],
@@ -22,17 +33,20 @@ const input = <a>(validatee: Validatee<a>, value: a): Validatee<a> => ({
   isValidated: false
 })
 
-const inputAndValidate = <a>(validator: Validator<a>) => (
-  validatee: Validatee<a>,
-  value: a
-): Validatee<a> => validator(input(validatee, value))
+/** Change the value of a validatee with real time validation */
+const inputAndValidate = <T>(validator: Validator<T>) => (
+  validatee: Validatee<T>,
+  value: T
+): Validated<T> => validator(input(validatee, value))
 
+/** Make a validatee valid unconditionally */
 const succeed: Validator<any> = validatee => ({
   ...validatee,
   isValid: true && (validatee.isValid || !validatee.isValidated),
   isValidated: true
 })
 
+/** Makes a validatee invalid unconditionally */
 const fail = (errorMsg: string): Validator<any> => validatee => ({
   ...validatee,
   isValid: false,
@@ -40,18 +54,21 @@ const fail = (errorMsg: string): Validator<any> => validatee => ({
   errors: [...validatee.errors, errorMsg]
 })
 
-const custom = <a>(
-  predicate: (value: a) => boolean,
+/** Makes a validatee valid or invalid depending on a predicate */
+const custom = <T>(
+  predicate: (value: T) => boolean,
   errorMsg: string
-): Validator<a> => validatee =>
+): Validator<T> => validatee =>
   predicate(validatee.value) ? succeed(validatee) : fail(errorMsg)(validatee)
 
-const compose = <a>(
-  validator1: Validator<a>,
-  validator2: Validator<a>
-): Validator<a> => validatee => validator2(validator1(validatee))
+/** Compose two validators to one validator */
+const compose = <T>(
+  validator1: Validator<T>,
+  validator2: Validator<T>
+): Validator<T> => validatee => validator2(validator1(validatee))
 
-const composeMany = <a>(validators: Validator<a>[]): Validator<a> =>
+/** Compose a list of validators to one new validator */
+const composeMany = <T>(validators: Validator<T>[]): Validator<T> =>
   validators.reduce(compose)
 
 export {
