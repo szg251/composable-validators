@@ -1,14 +1,14 @@
 {
-  "name": "validator",
+  "name": "composable-validators",
   "version": "0.1.0",
-  "description": "Validator library",
+  "description": "Composable Validators library",
   "scripts": {
     "build": "tsc",
     "test": "jest"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "repository": "https://github.com/gege251/validator",
+  "repository": "https://github.com/gege251/composable-validators",
   "author": "Gergo <gege251@gmail.com>",
   "license": "MIT",
   "devDependencies": {
