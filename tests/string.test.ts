@@ -30,7 +30,7 @@ describe("string validators", () => {
 
   describe("min", () => {
     it("succeeds when is longer than 4", () =>
-      expect(min(4, "too short")(init("1234"))).toEqual({
+      expect(min("too short", 4)(init("1234"))).toEqual({
         value: "1234",
         isValid: true,
         isValidated: true,
@@ -38,7 +38,7 @@ describe("string validators", () => {
       }))
 
     it("fails when shorter than 4", () =>
-      expect(min(4, "too short")(init("123"))).toEqual({
+      expect(min("too short", 4)(init("123"))).toEqual({
         value: "123",
         isValid: false,
         isValidated: true,
@@ -48,7 +48,7 @@ describe("string validators", () => {
 
   describe("max", () => {
     it("succeeds when is shorter than 4", () =>
-      expect(max(4, "too long")(init("1234"))).toEqual({
+      expect(max("too long", 4)(init("1234"))).toEqual({
         value: "1234",
         isValid: true,
         isValidated: true,
@@ -56,7 +56,7 @@ describe("string validators", () => {
       }))
 
     it("fails when longer than 4", () =>
-      expect(max(4, "too long")(init("12345"))).toEqual({
+      expect(max("too long", 4)(init("12345"))).toEqual({
         value: "12345",
         isValid: false,
         isValidated: true,
@@ -65,24 +65,70 @@ describe("string validators", () => {
   })
 
   describe("regex", () => {
-    it("succeeds when regex matches", () =>
-      expect(regex(/[a-z]/, "no lowercase letters")(init("abcABC123"))).toEqual(
-        {
-          value: "abcABC123",
-          isValid: true,
-          isValidated: true,
-          errors: []
-        }
-      ))
+    it("succeeds when regex matches", () => {
+      const expected = {
+        value: "abcABC123",
+        isValid: true,
+        isValidated: true,
+        errors: []
+      }
+      expect(regex("no lowercase letters", /[a-z]/)(init("abcABC123"))).toEqual(
+        expected
+      )
+      expect(regex("no lowercase letters", "[a-z]")(init("abcABC123"))).toEqual(
+        expected
+      )
+    })
 
-    it("fails when regex doesn't match", () =>
-      expect(regex(/[a-z]/, "no lowercase letters")(init("ABC123"))).toEqual({
+    it("fails when regex doesn't match", () => {
+      const expected = {
         value: "ABC123",
         isValid: false,
         isValidated: true,
         errors: ["no lowercase letters"]
-      }))
+      }
+      expect(regex("no lowercase letters", /[a-z]/)(init("ABC123"))).toEqual(
+        expected
+      )
+      expect(regex("no lowercase letters", "[a-z]")(init("ABC123"))).toEqual(
+        expected
+      )
+    })
   })
+})
+
+describe("hasXY", () => {
+  it("succeeds when has at least 1 number", () =>
+    expect(hasNumber("no numbers")(init("a2bc"))).toEqual({
+      value: "a2bc",
+      isValid: true,
+      isValidated: true,
+      errors: []
+    }))
+
+  it("fails when has no numbers", () =>
+    expect(hasNumber("no numbers")(init("abc"))).toEqual({
+      value: "abc",
+      isValid: false,
+      isValidated: true,
+      errors: ["no numbers"]
+    }))
+
+  it("succeeds when has the required amount of numbers", () =>
+    expect(hasNumber("not enough numbers", 2)(init("a2bc1"))).toEqual({
+      value: "a2bc1",
+      isValid: true,
+      isValidated: true,
+      errors: []
+    }))
+
+  it("fails when has less than required amount of numbers", () =>
+    expect(hasNumber("not enough numbers", 2)(init("a2bc"))).toEqual({
+      value: "a2bc",
+      isValid: false,
+      isValidated: true,
+      errors: ["not enough numbers"]
+    }))
 })
 
 describe("composed validators", () => {
@@ -90,7 +136,7 @@ describe("composed validators", () => {
     hasLowcase("no lowercase letters"),
     hasUpcase("no uppercase letters"),
     hasNumber("no numbers"),
-    min(5, "less than 5 chars")
+    min("less than 5 chars", 5)
   ])
 
   it("succeeds when meets password criteria", () => {
