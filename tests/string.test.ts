@@ -5,7 +5,8 @@ import {
   regex,
   hasLowcase,
   hasUpcase,
-  hasNumber
+  hasNumber,
+  isEmail
 } from "../src/string"
 import { init, composeMany } from "../src/validatee"
 
@@ -97,7 +98,7 @@ describe("string validators", () => {
   })
 })
 
-describe("hasXY", () => {
+describe("regex based", () => {
   it("succeeds when has at least 1 number", () =>
     expect(hasNumber("no numbers")(init("a2bc"))).toEqual({
       value: "a2bc",
@@ -128,6 +129,22 @@ describe("hasXY", () => {
       isValid: false,
       isValidated: true,
       errors: ["not enough numbers"]
+    }))
+
+  it("succeeds when email is valid", () =>
+    expect(isEmail("invalid email")(init("abc@abc.com"))).toEqual({
+      value: "abc@abc.com",
+      isValid: true,
+      isValidated: true,
+      errors: []
+    }))
+
+  it("fails when email is invalid", () =>
+    expect(isEmail("invalid email")(init("abc@abc"))).toEqual({
+      value: "abc@abc",
+      isValid: false,
+      isValidated: true,
+      errors: ["invalid email"]
     }))
 })
 

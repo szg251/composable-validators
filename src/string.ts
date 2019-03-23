@@ -23,4 +23,10 @@ const hasUpcase = (errorMsg: string, atLeast: number = 1): Validator<string> =>
 const hasNumber = (errorMsg: string, atLeast: number = 1): Validator<string> =>
   regex(errorMsg, `([0-9].*){${atLeast}}`)
 
-export { isString, min, max, regex, hasLowcase, hasUpcase, hasNumber }
+const isEmail = (errorMsg: string): Validator<string> =>
+  regex(
+    errorMsg,
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  )
+
+export { isString, min, max, regex, hasLowcase, hasUpcase, hasNumber, isEmail }
