@@ -54,6 +54,10 @@ const fail = (errorMsg: string): Validator<any> => validatee => ({
   errors: [...validatee.errors, errorMsg]
 })
 
+// const not: Validator<any> = validatee => ({
+
+// })
+
 /** Makes a validatee valid or invalid depending on a predicate */
 const custom = <T>(
   predicate: (value: T) => boolean,
@@ -74,6 +78,7 @@ const composeMany = <T>(validators: Validator<T>[]): Validator<T> =>
 export {
   Validator,
   Validatee,
+  Validated,
   init,
   compose,
   composeMany,
