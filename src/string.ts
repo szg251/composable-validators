@@ -1,11 +1,5 @@
-import {
-  Validator,
-  custom,
-  composeMany,
-  init,
-  succeed,
-  fail
-} from "./validatee"
+import { Validator, custom, init } from "./validatee"
+import * as array from "./array"
 
 /*
  * Basic validators
@@ -16,7 +10,7 @@ const regex = (errorMsg: string, regexp: string | RegExp): Validator<string> =>
     ? custom(value => new RegExp(regexp).test(value), errorMsg)
     : custom(value => regexp.test(value), errorMsg)
 
-const isString = (errorMsg: string): Validator<any> =>
+const isString = <T>(errorMsg: string): Validator<T> =>
   custom(value => typeof value === "string", errorMsg)
 
 const min = (errorMsg: string, minChars: number): Validator<string> =>
@@ -60,21 +54,10 @@ const separated = (
   errorMsg: string,
   separator: string,
   validators: Validator<string>[]
-): Validator<string> => validatee => {
-  const separatedStr = validatee.value.split(separator)
-  if (separatedStr.length !== validators.length) {
-    return fail(errorMsg)(validatee)
-  } else {
-    return separatedStr.reduce((prev, current, index) => {
-      const validatedPart = validators[index](init(current))
-      return {
-        ...prev,
-        isValid: prev.isValid && validatedPart.isValid,
-        errors: [...prev.errors, ...validatedPart.errors]
-      }
-    }, succeed(validatee))
-  }
-}
+): Validator<string> => validatee => ({
+  ...array.each(errorMsg, validators)(init(validatee.value.split(separator))),
+  value: validatee.value
+})
 
 export {
   isString,

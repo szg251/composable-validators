@@ -9,7 +9,7 @@ interface Validated<T> {
 
 interface NotValidated<T> {
   value: T
-  errors: string[]
+  errors: []
   isValid: false
   isValidated: false
 }
@@ -54,6 +54,17 @@ const fail = (errorMsg: string): Validator<any> => validatee => ({
   errors: [...validatee.errors, errorMsg]
 })
 
+/** Merges two validated values. Value is inherited from the first validatee */
+const merge = <T>(
+  validatee1: Validated<T>,
+  validatee2: Validated<any>
+): Validated<T> => ({
+  value: validatee1.value,
+  isValidated: true,
+  isValid: validatee1.isValid && validatee2.isValid,
+  errors: [...validatee1.errors, ...validatee2.errors]
+})
+
 // const not: Validator<any> = validatee => ({
 
 // })
@@ -84,6 +95,7 @@ export {
   composeMany,
   fail,
   succeed,
+  merge,
   input,
   inputAndValidate,
   custom

@@ -1,6 +1,6 @@
 import { Validator, custom } from "./validatee"
 
-const isNumber = (errorMsg: string): Validator<any> =>
+const isNumber = <T>(errorMsg: string): Validator<T> =>
   custom(value => typeof value === "number", errorMsg)
 
 const min = (errorMsg: string, minChars: number): Validator<number> =>
