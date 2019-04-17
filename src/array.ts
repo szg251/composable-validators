@@ -1,5 +1,6 @@
 import { Validator, init, fail, succeed, merge } from "./validatee"
 
+/** Creates a validator that checks if the array is exactly as long as a given number */
 const length = <T>(
   errorMsg: string,
   amount: number
@@ -8,6 +9,7 @@ const length = <T>(
     ? succeed(validatee)
     : fail(errorMsg)(validatee)
 
+/** Creates a validator that checks all the values in the array with a given validator */
 const every = <T>(validator: Validator<T>): Validator<T[]> => validatee => {
   return validatee.value.reduce((prev, current, index) => {
     const validatedPart = validator(init(current))
@@ -19,6 +21,7 @@ const every = <T>(validator: Validator<T>): Validator<T[]> => validatee => {
   }, succeed(validatee))
 }
 
+/** Creates a validator that checks all the values in the array with a given list of validator */
 const each = <T>(
   errorMsg: string,
   validators: Validator<T>[]
