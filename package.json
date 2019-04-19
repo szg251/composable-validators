@@ -9,7 +9,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/gege251/composable-validators",
-  "author": "Gergo <gege251@gmail.com>",
+  "author": "Gergely Szabo <gege251@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^24.0.11",
