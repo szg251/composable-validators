@@ -86,6 +86,9 @@ const compose = <T>(
 const composeMany = <T>(validators: Validator<T>[]): Validator<T> =>
   validators.reduce(compose)
 
+const validate = <T>(value: T, validator: Validator<T>): Validated<T> =>
+  validator(init(value))
+
 export {
   Validator,
   Validatee,
@@ -98,5 +101,6 @@ export {
   merge,
   input,
   inputAndValidate,
-  custom
+  custom,
+  validate
 }
