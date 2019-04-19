@@ -1,58 +1,34 @@
-import { isNumber, min, max } from "../src/number"
-import { init, composeMany } from "../src/validatee"
+import * as number from "../src/number"
+import { init, validate } from "../src/core"
 
 describe("number validators", () => {
   describe("isNumber", () => {
+    const isNumber = number.isNumber("not a number")
+
     it("succeeds when is number", () =>
-      expect(isNumber("not a number")(init(123))).toEqual({
-        value: 123,
-        isValid: true,
-        isValidated: true,
-        errors: []
-      }))
+      expect(validate(123, isNumber).isValid).toBeTruthy())
 
     it("fails when not number", () =>
-      expect(isNumber("not a number")(init(false))).toEqual({
-        value: false,
-        isValid: false,
-        isValidated: true,
-        errors: ["not a number"]
-      }))
+      expect(validate(false, isNumber).isValid).toBeFalsy())
   })
 
   describe("min", () => {
+    const min = number.min("too small", 400)
+
     it("succeeds when is larger than or equal to 4", () =>
-      expect(min("too small", 400)(init(400))).toEqual({
-        value: 400,
-        isValid: true,
-        isValidated: true,
-        errors: []
-      }))
+      expect(validate(400, min).isValid).toBeTruthy())
 
     it("fails when smaller than 4", () =>
-      expect(min("too small", 400)(init(399))).toEqual({
-        value: 399,
-        isValid: false,
-        isValidated: true,
-        errors: ["too small"]
-      }))
+      expect(validate(399, number.min("too small", 400)).isValid).toBeFalsy())
   })
 
   describe("max", () => {
+    const max = number.max("too large", 400)
+
     it("succeeds when is smaller than or equal to 4", () =>
-      expect(max("too large", 400)(init(400))).toEqual({
-        value: 400,
-        isValid: true,
-        isValidated: true,
-        errors: []
-      }))
+      expect(validate(400, max).isValid).toBeTruthy())
 
     it("fails when longer than 4", () =>
-      expect(max("too large", 400)(init(401))).toEqual({
-        value: 401,
-        isValid: false,
-        isValidated: true,
-        errors: ["too large"]
-      }))
+      expect(validate(401, max).isValid).toBeFalsy())
   })
 })

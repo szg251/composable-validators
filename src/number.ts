@@ -1,4 +1,4 @@
-import { Validator, custom } from "./validatee"
+import { Validator, custom } from "./core"
 
 /** Creates a validator that checks if the value is a number */
 const isNumber = <T>(errorMsg: string): Validator<T> =>

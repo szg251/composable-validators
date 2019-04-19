@@ -1,4 +1,4 @@
-import { Validator, custom, init } from "./validatee"
+import { Validator, custom, init } from "./core"
 import * as array from "./array"
 
 /*

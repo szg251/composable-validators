@@ -1,4 +1,4 @@
-import { Validator, fail, succeed, merge, validate } from "./validatee"
+import { Validator, fail, succeed, merge, validate } from "./core"
 
 type Schema<T> = { [K in keyof T]: Validator<T[K]> }
 
@@ -13,10 +13,10 @@ const schema = <T extends Object>(
   )
 
 /** Creates a validator that checks if the object type matches the schema */
-const schemaForm = (
+const schemaForm = <T>(
   errorMsg: string,
-  schema: Schema<any>
-): Validator<any> => validatee =>
+  schema: Schema<T>
+): Validator<T> => validatee =>
   Object.keys(schema).every(key => typeof validatee.value[key] !== "undefined")
     ? succeed(validatee)
     : fail(errorMsg)(validatee)

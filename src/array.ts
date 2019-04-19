@@ -1,4 +1,4 @@
-import { Validator, fail, succeed, merge, validate } from "./validatee"
+import { Validator, fail, succeed, merge, validate } from "./core"
 
 /** Creates a validator that checks if the array is exactly as long as a given number */
 const length = <T>(

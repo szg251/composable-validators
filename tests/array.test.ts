@@ -1,5 +1,5 @@
 import { length, every, each } from "../src/array"
-import { init } from "../src/validatee"
+import { init } from "../src/core"
 import * as string from "../src/string"
 
 describe("array validators", () => {

@@ -65,10 +65,6 @@ const merge = <T>(
   errors: [...validatee1.errors, ...validatee2.errors]
 })
 
-// const not: Validator<any> = validatee => ({
-
-// })
-
 /** Makes a validatee valid or invalid depending on a predicate */
 const custom = <T>(
   predicate: (value: T) => boolean,
@@ -86,8 +82,16 @@ const compose = <T>(
 const composeMany = <T>(validators: Validator<T>[]): Validator<T> =>
   validators.reduce(compose)
 
+/** Helper function that initalizes a value and runs a validator on it */
 const validate = <T>(value: T, validator: Validator<T>): Validated<T> =>
   validator(init(value))
+
+/** Flips the result of a validator */
+const not = <T>(
+  errorMsg: string,
+  validator: Validator<T>
+): Validator<T> => validatee =>
+  validator(validatee).isValid ? fail(errorMsg)(validatee) : succeed(validatee)
 
 export {
   Validator,
@@ -102,5 +106,6 @@ export {
   input,
   inputAndValidate,
   custom,
-  validate
+  validate,
+  not
 }

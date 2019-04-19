@@ -1,5 +1,5 @@
 import { schema } from "../src/object"
-import { init } from "../src/validatee"
+import { init, validate } from "../src/core"
 import * as string from "../src/string"
 
 describe("object validators", () => {
@@ -13,12 +13,13 @@ describe("object validators", () => {
 
       it("succeeds when every property of the object succeeds", () =>
         expect(
-          schemaValidator(
-            init({
+          validate(
+            {
               fieldA: "1234",
               fieldB: "1234",
               fieldC: "1234"
-            })
+            },
+            schemaValidator
           ).isValid
         ).toBeTruthy())
 

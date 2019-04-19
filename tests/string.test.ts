@@ -11,7 +11,7 @@ import {
   isEmail,
   separated
 } from "../src/string"
-import { init, composeMany } from "../src/validatee"
+import { init, composeMany } from "../src/core"
 
 describe("string validators", () => {
   describe("isString", () => {

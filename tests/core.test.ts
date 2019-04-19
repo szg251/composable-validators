@@ -7,8 +7,9 @@ import {
   input,
   custom,
   compose,
-  composeMany
-} from "../src/validatee"
+  composeMany,
+  not
+} from "../src/core"
 
 const initialized: Validatee<number> = {
   value: 1,
@@ -122,4 +123,12 @@ describe("composeMany", () => {
     expect(
       composeMany([succeed, fail("validation error"), succeed])(initialized)
     ).toEqual(failed))
+})
+
+describe("logical NOT combinator", () => {
+  it("succeeds when the validator succeeds", () =>
+    expect(not("validation error", fail(""))(initialized)).toEqual(succeeded))
+
+  it("fails when the string contains upper case letters", () =>
+    expect(not("validation error", succeed)(initialized)).toEqual(failed))
 })
