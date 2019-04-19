@@ -1,3 +1,11 @@
 language: node_js
 node_js:
-  - "10"
+- '10'
+deploy:
+  provider: npm
+  email: gege251@gmail.com
+  api_key:
+    secure: zabhbokcVfnzpJde0aVzCDRG1qyco39MY9HZwe41hvvItog90bgIZO0ZM29jLbFrI5K+lKV1/4c8YNih9FkUigqmlxIDqxgLw4V+sSpV4cegBd7C3aJiDDfveuXRvAQTFEbKeIYFkIAMtxDtd1lLAFZQFkzVgXevX792gtfrQZlKBmGkvQqItSovoe2+uxAK+/xfjqU/zOatouf2r7PSGLnwkYqZapDiZciAejNRNbbhAdHMxjFwBOn6D7I27tbElwrVL68zmwpZCuErD0cdwV98EgSjIReBO3+6Z7hK90AcP1xz62thF3S1BLJzL0EV1LA0XfnLxPLQNKH+GxfdYG4hQ2SGfCUAZkJK1BmEkRDl9tCqZ82CTAN/Yn0gyljIWXg7XqBHVfB0hu23WCrp6dt2AoDx+BTZYb3wpjme/VhNgL13dfVo6sZ1ANg5kwtQCVdFeLpRGxYVhWnqa2UriGAmKrHqj17hoqjxm6O8fuGFG/9B8VtS6IWjcVJHx+gvgdRhkD7Sak3C4tLcGNbZxQsZPHjT48Wby1qung3D3skdrtnBvc6mifq1Ht8UP0Kuxnd1ghjDcm84sWuYYCQrvilJYiU4dRzyYQelBLeB9jnEuUKUXbkoLhRbqTbhBIaG4h22OkB8d+e7K+VkpvaAtQUHa1m0CvUfG9Wn96MbBwE=
+  on:
+    tags: true
+    repo: gege251/composable-validators
