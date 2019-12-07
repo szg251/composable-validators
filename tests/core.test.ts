@@ -7,7 +7,7 @@ import {
   input,
   custom,
   compose,
-  composeMany,
+  many,
   not
 } from "../src/core"
 
@@ -101,15 +101,13 @@ describe("compose", () => {
     ).toEqual(failed))
 })
 
-describe("composeMany", () => {
+describe("many", () => {
   it("succeeds when all validators succeed", () =>
-    expect(composeMany([succeed, succeed, succeed])(initialized)).toEqual(
-      succeeded
-    ))
+    expect(many([succeed, succeed, succeed])(initialized)).toEqual(succeeded))
 
   it("fails when all validators fail", () =>
     expect(
-      composeMany([
+      many([
         fail("validation error 1"),
         fail("validation error 2"),
         fail("validation error 3")
@@ -121,7 +119,7 @@ describe("composeMany", () => {
 
   it("fails when one of the validators fail", () =>
     expect(
-      composeMany([succeed, fail("validation error"), succeed])(initialized)
+      many([succeed, fail("validation error"), succeed])(initialized)
     ).toEqual(failed))
 })
 

@@ -79,7 +79,7 @@ const compose = <T>(
 ): Validator<T> => validatee => validator2(validator1(validatee))
 
 /** Compose a list of validators to one new validator */
-const composeMany = <T>(validators: Validator<T>[]): Validator<T> =>
+const many = <T>(validators: Validator<T>[]): Validator<T> =>
   validators.reduce(compose)
 
 /** Helper function that initalizes a value and runs a validator on it */
@@ -99,7 +99,7 @@ export {
   Validated,
   init,
   compose,
-  composeMany,
+  many,
   fail,
   succeed,
   merge,
