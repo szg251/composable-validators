@@ -2,15 +2,33 @@
   "name": "composable-validators",
   "version": "0.2.0",
   "description": "Composable Validators library",
+  "main": "lib/index.js",
+  "module": "lib/index.es.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "scripts": {
+    "test": "jest",
     "build": "tsc",
-    "test": "jest"
+    "clean": "rm -rf ./lib",
+    "tsc": "tsc --module commonjs",
+    "lint": "tslint -p tsconfig.json"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "repository": "https://github.com/gege251/composable-validators",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gege251/composable-validators.git"
+  },
+  "keywords": [],
   "author": "Gergely Szabo <gege251@gmail.com>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kakekomu/remote-data/issues"
+  },
+  "homepage": "https://github.com/kakekomu/remote-data#readme",
+  "dependencies": {
+    "@kakekomu/result-type": "^1.2.0-alpha.14"
+  },
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "jest": "^24.5.0",
@@ -18,7 +36,7 @@
     "tslint": "^5.14.0",
     "typescript": "^3.3.4000"
   },
-  "dependencies": {
-    "@kakekomu/result-type": "^1.2.0-alpha.14"
+  "publishConfig": {
+    "access": "public"
   }
 }
