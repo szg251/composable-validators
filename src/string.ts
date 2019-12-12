@@ -38,7 +38,7 @@ const length = (errorMsg: string, minChars: number): Validator<string> =>
 /** Creates a validator that checks if the value has a lower case letter.
  *  Optionally the minimum number of matches can be specified.
  */
-const hasLowcase = (errorMsg: string, atLeast: number = 1): Validator<string> =>
+const hasLowcase = (errorMsg: string, atLeast = 1): Validator<string> =>
   regex(errorMsg, `([a-z].*){${atLeast}}`)
 
 /** Creates a validator that check if the value only consists of lower case letters */
@@ -48,7 +48,7 @@ const onlyLowcases = (errorMsg: string): Validator<string> =>
 /** Creates a validator that checks if the value has a upper case letter.
  *  Optionally the minimum number of matches can be specified.
  */
-const hasUpcase = (errorMsg: string, atLeast: number = 1): Validator<string> =>
+const hasUpcase = (errorMsg: string, atLeast = 1): Validator<string> =>
   regex(errorMsg, `([A-Z].*){${atLeast}}`)
 
 /** Creates a validator that checks if the value only consists of upper case letters */
@@ -58,7 +58,7 @@ const onlyUpcases = (errorMsg: string): Validator<string> =>
 /** Creates a validator that checks if the value has a number.
  *  Optionally the minimum number of matches can be specified.
  */
-const hasNumber = (errorMsg: string, atLeast: number = 1): Validator<string> =>
+const hasNumber = (errorMsg: string, atLeast = 1): Validator<string> =>
   regex(errorMsg, `([0-9].*){${atLeast}}`)
 
 /** Creates a validator that checks if the value only consists of numbers */

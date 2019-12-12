@@ -4,7 +4,7 @@ import { Validator, prev } from "./core"
 type Schema<T> = { [K in keyof T]: Validator<T[K]> }
 
 /** Creates a validator that checks the properties of an object based on a schema */
-const schema = <T extends Object>(
+const schema = <T extends Record<string | number, any>>(
   errorMsg: string,
   schema: Schema<T>
 ): Validator<T> => obj => {
