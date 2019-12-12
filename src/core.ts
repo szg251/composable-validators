@@ -1,111 +1,98 @@
-type Validatee<T> = NotValidated<T> | Validated<T>
+import { Result, Ok, Err, isOk, isErr } from "@kakekomu/result-type";
 
-interface Validated<T> {
-  value: T
-  errors: string[]
-  isValid: boolean
-  isValidated: true
-}
+type Validated<T> = Result<string[], T>;
 
-interface NotValidated<T> {
-  value: T
-  errors: []
-  isValid: false
-  isValidated: false
-}
+/** Validator is simply a function that returns a Result type
+ *  Some validators will change the type of the value type. For example
+ *  an isString validator takes an `any` and returns a `Validated<string>`
+ */
+type Validator<A, B extends A = A> = (value: A) => Validated<B>;
 
-type Validator<T> = (validatee: Validatee<T>) => Validated<T>
+const mergeErrors = (
+  validated1: Validated<any>,
+  validated2: Validated<any>
+): Validated<any> => {
+  const errors1 = isErr(validated1) ? validated1.error : [];
+  const errors2 = isErr(validated2) ? validated2.error : [];
 
-/** Initializing a validatee */
-const init = <T>(value: T): NotValidated<T> => ({
-  value,
-  errors: [],
-  isValid: false,
-  isValidated: false
-})
+  return Err([...errors1, ...errors2]);
+};
 
-/** Change the value of a validatee */
-const input = <T>(validatee: Validatee<T>, value: T): NotValidated<T> => ({
-  ...validatee,
-  value,
-  errors: [],
-  isValid: false,
-  isValidated: false
-})
+/** Merges two validated values.
+ * If both validated values are Ok, the first validatee will be returned.
+ * If one or both of them fails, all the errors will be returned.
+ */
+const prev = <T>(
+  validated1: Validated<T>,
+  validated2: Validated<any>
+): Validated<T> => {
+  if (isOk(validated1) && isOk(validated2)) {
+    return validated1;
+  } else {
+    return mergeErrors(validated1, validated2);
+  }
+};
 
-/** Change the value of a validatee with real time validation */
-const inputAndValidate = <T>(validator: Validator<T>) => (
-  validatee: Validatee<T>,
-  value: T
-): Validated<T> => validator(input(validatee, value))
+/** Merges two validated values.
+ * If both validated values are Ok, the second validatee will be returned.
+ * If one or both of them fails, all the errors will be returned.
+ */
+const next = <T>(
+  validated1: Validated<any>,
+  validated2: Validated<T>
+): Validated<T> => {
+  if (isOk(validated1) && isOk(validated2)) {
+    return validated2;
+  } else {
+    return mergeErrors(validated1, validated2);
+  }
+};
 
-/** Make a validatee valid unconditionally */
-const succeed: Validator<any> = validatee => ({
-  ...validatee,
-  isValid: true && (validatee.isValid || !validatee.isValidated),
-  isValidated: true
-})
+/** Validates an unknown type using a TS guard funcion */
+const customGuarded = <A, B extends A = A>(
+  predicate: (value: A) => value is B,
+  errorMsg: string
+): Validator<A, B> => value => (predicate(value) ? Ok(value) : Err([errorMsg]));
 
-/** Makes a validatee invalid unconditionally */
-const fail = (errorMsg: string): Validator<any> => validatee => ({
-  ...validatee,
-  isValid: false,
-  isValidated: true,
-  errors: [...validatee.errors, errorMsg]
-})
-
-/** Merges two validated values. Value is inherited from the first validatee */
-const merge = <T>(
-  validatee1: Validated<T>,
-  validatee2: Validated<any>
-): Validated<T> => ({
-  value: validatee1.value,
-  isValidated: true,
-  isValid: validatee1.isValid && validatee2.isValid,
-  errors: [...validatee1.errors, ...validatee2.errors]
-})
-
-/** Makes a validatee valid or invalid depending on a predicate */
+/** Validates a value using a predicate funcion */
 const custom = <T>(
   predicate: (value: T) => boolean,
   errorMsg: string
-): Validator<T> => validatee =>
-  predicate(validatee.value) ? succeed(validatee) : fail(errorMsg)(validatee)
+): Validator<T> => value => (predicate(value) ? Ok(value) : Err([errorMsg]));
 
-/** Compose two validators to one validator */
+/** Compose two validators to one */
 const compose = <T>(
   validator1: Validator<T>,
   validator2: Validator<T>
-): Validator<T> => validatee => validator2(validator1(validatee))
+): Validator<T> => value => {
+  const validated1 = validator1(value);
+  const validated2 = validator2(value);
+
+  if (isOk(validated1) && isOk(validated2)) {
+    return Ok(value);
+  }
+  return mergeErrors(validated1, validated2);
+};
 
 /** Compose a list of validators to one new validator */
 const many = <T>(validators: Validator<T>[]): Validator<T> =>
-  validators.reduce(compose)
-
-/** Helper function that initalizes a value and runs a validator on it */
-const validate = <T>(value: T, validator: Validator<T>): Validated<T> =>
-  validator(init(value))
+  validators.reduce(compose);
 
 /** Flips the result of a validator */
 const not = <T>(
   errorMsg: string,
   validator: Validator<T>
-): Validator<T> => validatee =>
-  validator(validatee).isValid ? fail(errorMsg)(validatee) : succeed(validatee)
+): Validator<T> => value =>
+  isOk(validator(value)) ? Err([errorMsg]) : Ok(value);
 
 export {
   Validator,
-  Validatee,
   Validated,
-  init,
   compose,
   many,
-  fail,
-  succeed,
-  merge,
-  input,
-  inputAndValidate,
+  prev,
+  next,
   custom,
-  validate,
+  customGuarded,
   not
-}
+};
